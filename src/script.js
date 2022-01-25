@@ -3,12 +3,12 @@
 const Web3 = require('web3');
 //const Provider = require('@truffle/hdwallet-provider');
 //const MyContract = require('./build/contracts/TodoList.json');
-const myAddress = '0x2357828683b56F492b5Cf857E96F512Be2b28C76';
-const privateKey = '6ea66d370f3fc44e237eebe53404dad480fa0b11c95c1cc37b4867102d89b2a5';
+const myAddress = '0xa1d5498e14bc0260A8eB431581738615C2102e98';
+const privateKey = '62017f9279ab2a59e824389077b10612697870adbb3000ae85de6ecfd70e66f7';
 const network = 'HTTP://127.0.0.1:7545';
 const web3 = new Web3(network);
 
-const sendTransaction = async () => {
+const sendTransactionAdmin = async (toAddress) => {
   //const provider = new Provider(privateKey, network); 
 
   //const networkId = await web3.eth.net.getId();
@@ -22,8 +22,8 @@ const sendTransaction = async () => {
   const nonce = await web3.eth.getTransactionCount(myAddress, 'latest'); // nonce starts counting from 0
 
   const transaction = {
-    'to': '0xc7C195366c25bCf315D328Cd5e4A67aC75Ae793F', //TODO: use variable
-    'value': 1000000000000000000,
+    'to': toAddress, //TODO: use variable
+    'value': 5000000000000000000,
     'gas': 30000,
     'nonce': nonce,
     //'data': field to execute smart contract
@@ -38,6 +38,29 @@ const sendTransaction = async () => {
       console.log("❗Something went wrong while submitting your transaction:", error)
     }
   });
+}
+
+const sendTransactionUser = async (from, toAddress, password) => {
+  const nonce = await web3.eth.getTransactionCount(from, 'latest'); // nonce starts counting from 0
+  await web3.eth.personal.unlockAccount(from, password);
+
+  const transaction = {
+    'from': from,
+    'to': toAddress,
+    'value': 1000000000000000000,//TODO: variable
+    'gas': 30000,
+    'nonce': nonce,
+    //'data': field to execute smart contract
+  };
+
+  await web3.eth.sendTransaction(transaction, function (error, hash) {
+    if (!error) {
+      console.log("🎉 The hash of your transaction is: ", hash, "\n Check the status of your transaction!");
+    } else {
+      console.log("❗Something went wrong while submitting your transaction:", error)
+    }
+  });
+  await web3.eth.personal.lockAccount(from);
 }
 
 const checkLastTransactions = async () => {
@@ -66,5 +89,19 @@ const checkLastTransactions = async () => {
   }
 }
 
+const createAccount = async () => {
+  pass = "passwordXPTO7";
+  const account = await web3.eth.personal.newAccount(pass);
+  console.log(pass)
+}
+
+const checkAccounts = async() => {
+  var accounts = await web3.eth.getAccounts();
+  console.log(accounts)
+}
+
 //sendTransaction();
-checkLastTransactions();
+//checkLastTransactions();
+//createAccount();
+//checkAccounts();
+
