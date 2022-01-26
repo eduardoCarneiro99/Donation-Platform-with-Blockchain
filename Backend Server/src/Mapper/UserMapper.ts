@@ -5,7 +5,6 @@ import { Email } from "../Domain/User/Email";
 import { Expenditure } from "../Domain/User/Expenditure";
 import { Password } from "../Domain/User/Password";
 import { User } from "../Domain/User/User";
-import { Username } from "../Domain/User/Username";
 import { ExpenditureDTO } from "../DTO/ExpenditureDTO";
 import { UserDTO } from "../DTO/UserDTO";
 import AssociationModel from "../Model/AssociationModel";
@@ -56,9 +55,7 @@ export class UserMapper {
         userDTO.role,
         userDTO.donationsReceivedCounter,
         userDTO.totalCoinReceived,
-        userDTO.expenditureList.map<Expenditure>((expenditure) =>
-          ExpenditureMapper.dto2Domain(expenditure)
-        )
+        userDTO.expenditureList.map<Expenditure>((expenditure) => ExpenditureMapper.dto2Domain(expenditure))
       );
     }
     return userDomain;
@@ -97,9 +94,7 @@ export class UserMapper {
           totalCoinReceived: association.getTotalCoinReceived(),
           expenditureList: association
             .getExpenditureList()
-            .map<IExpenditureModel>((expanditure) =>
-              ExpenditureMapper.domain2Model(expanditure)
-            ),
+            .map<IExpenditureModel>((expanditure) => ExpenditureMapper.domain2Model(expanditure)),
         }),
       });
     }
@@ -130,8 +125,8 @@ export class UserMapper {
         userModel.role,
         userModel.association.donationsReceivedCounter,
         userModel.association.totalCoinReceived,
-        userModel.association.expenditureList.map<Expenditure>(
-          (expenditureModel) => ExpenditureMapper.model2Domain(expenditureModel)
+        userModel.association.expenditureList.map<Expenditure>((expenditureModel) =>
+          ExpenditureMapper.model2Domain(expenditureModel)
         )
       );
     }
@@ -171,11 +166,7 @@ export class UserMapper {
         association.getDescription(),
         association.getDonationsReceivedCounter(),
         association.getTotalCoinReceived(),
-        association
-          .getExpenditureList()
-          .map<ExpenditureDTO>((expenditure) =>
-            ExpenditureMapper.domain2Dto(expenditure)
-          )
+        association.getExpenditureList().map<ExpenditureDTO>((expenditure) => ExpenditureMapper.domain2Dto(expenditure))
       );
     }
     return userDTO;

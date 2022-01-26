@@ -4,13 +4,7 @@ import ExpenditureModel, { IExpenditureModel } from "../Model/ExpenditureModel";
 
 export class ExpenditureMapper {
   static json2Dto(body: any): ExpenditureDTO {
-    return new ExpenditureDTO(
-      body.id,
-      body.value,
-      body.justification,
-      body.date,
-      body.transactionId
-    );
+    return new ExpenditureDTO(body.id, body.value, body.justification, body.date, body.transactionId);
   }
 
   static dto2Domain(expenditureDTO: ExpenditureDTO): Expenditure {
@@ -29,7 +23,8 @@ export class ExpenditureMapper {
       id: expenditure.getID(),
       value: expenditure.getValue(),
       justification: expenditure.getJustification(),
-      date: expenditure.getDate().toDateString(),
+      date: expenditure.getDate().toString(),
+      transactionId: expenditure.getTransactionId(),
     });
     return expenditureModel;
   }
@@ -50,7 +45,7 @@ export class ExpenditureMapper {
       expenditure.getID(),
       expenditure.getValue(),
       expenditure.getJustification(),
-      expenditure.getDate().toDateString(),
+      expenditure.getDate().toString(),
       expenditure.getTransactionId()
     );
     return expenditureDTO;

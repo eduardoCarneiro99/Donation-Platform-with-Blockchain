@@ -3,16 +3,10 @@ import { UserMapper } from "../../Mapper/UserMapper";
 import { IUserModel } from "../../Model/UserModel";
 import { IUserRepository } from "../InterfacesRepository/IUserRepository";
 import userDB from "../../Model/UserModel";
-import { Land } from "../../Domain/Land/Land";
-import { ILandModel } from "../../Model/LandModel";
-import { LandMapper } from "../../Mapper/LandMapper";
-import { Lot } from "../../Domain/Land/Lot";
-import { LotMapper } from "../../Mapper/LotMapper";
-import { ILotModel } from "../../Model/LotModel";
-import { Equipment } from "../../Domain/Land/Equipment";
-import { EquipmentMapper } from "../../Mapper/EquipmentMapper";
-import { IEquipmentModel } from "../../Model/EquipmentModel";
 import { injectable } from "inversify";
+import { Expenditure } from "../../Domain/User/Expenditure";
+import { IExpenditureModel } from "../../Model/ExpenditureModel";
+import { ExpenditureMapper } from "../../Mapper/ExpenditureMapper";
 
 @injectable()
 export class MongoUserRepository implements IUserRepository {
@@ -25,8 +19,8 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async findByEmail(emailString: string): Promise<User> {
-    const foundUserPromise: IUserModel = await userDB.findOne({"email": emailString});
-    if (foundUserPromise == undefined){
+    const foundUserPromise: IUserModel = await userDB.findOne({ email: emailString });
+    if (foundUserPromise == undefined) {
       throw new Error("User");
     }
     const userDomainRet: User = UserMapper.model2Domain(foundUserPromise);
@@ -51,10 +45,8 @@ export class MongoUserRepository implements IUserRepository {
     });
 
     userModelSearch.name = userModel.name;
-    userModelSearch.username = userModel.username;
     userModelSearch.password = userModel.password;
     userModelSearch.email = userModel.email;
-    userModelSearch.landList = userModel.landList;
 
     await userDB.updateOne({}, userModelSearch).exec();
 
@@ -71,289 +63,78 @@ export class MongoUserRepository implements IUserRepository {
     }
   }
 
-  async addLandToUser(id: String, land: Land): Promise<Land> {
-    const landModel: ILandModel = LandMapper.domain2Model(land);
+  async addExpenditureToUser(id: String, expenditure: Expenditure): Promise<Expenditure> {
+    const expenditureModel: IExpenditureModel = ExpenditureMapper.domain2Model(expenditure);
     const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
       throw new Error(err);
     });
 
-    foundUserPromise.landList.push(landModel);
+    foundUserPromise.association.expenditureList.push(expenditureModel);
 
-    await userDB.findByIdAndUpdate(id, foundUserPromise).catch( (err) => {
+    await userDB.findByIdAndUpdate(id, foundUserPromise).catch((err) => {
       throw new Error(err);
     });
 
-    return LandMapper.model2Domain(landModel);
+    return ExpenditureMapper.model2Domain(expenditureModel);
   }
 
-  async updateUserLand(id: String, land: Land): Promise<Land> {
-    const landModel: ILandModel = LandMapper.domain2Model(land);
+  async updateUserExpenditure(id: String, expenditure: Expenditure): Promise<Expenditure> {
+    const expenditureModel: IExpenditureModel = ExpenditureMapper.domain2Model(expenditure);
 
     const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
       throw new Error(err);
     });
 
-    for (let element of foundUserPromise.landList) {
-      if (element._id.valueOf() == landModel.id) {
-        element.name = landModel.name;
-        element.description = landModel.description;
-        element.lotList = landModel.lotList;
+    for (let element of foundUserPromise.association.expenditureList) {
+      if (element._id.valueOf() == expenditureModel.id) {
+        element.value = expenditureModel.value;
+        element.justification = expenditureModel.justification;
+        element.date = expenditureModel.date;
+        element.transactionId = expenditureModel.transactionId;
         break;
       }
     }
 
-    await userDB.findByIdAndUpdate(id, foundUserPromise).catch( (err) => {
+    await userDB.findByIdAndUpdate(id, foundUserPromise).catch((err) => {
       throw new Error(err);
     });
 
-    return land;
+    return expenditure;
   }
 
-  async findUserLandById(userID: string, landID: string): Promise<Land> {
+  async findUserExpenditureById(userID: string, expenditureID: string): Promise<Expenditure> {
     const foundUserPromise: IUserModel = await userDB.findById(userID).catch((err) => {
       throw new Error(err);
     });
 
-    for (let element of foundUserPromise.landList) {
-      if (element._id.valueOf() == landID) {
-        return LandMapper.model2Domain(element);
+    for (let element of foundUserPromise.association.expenditureList) {
+      if (element._id.valueOf() == expenditureID) {
+        return ExpenditureMapper.model2Domain(element);
       }
     }
 
     return null;
   }
 
-  async deleteUserLand(userID: string, landID: string): Promise<boolean> {
+  async deleteUserExpenditure(userID: string, expenditureID: string): Promise<boolean> {
     let index = null;
     const foundUserPromise: IUserModel = await userDB.findById(userID).catch((err) => {
       throw new Error(err);
     });
-    for (let i = 0; i < foundUserPromise.landList.length; i++) {
-      if (foundUserPromise.landList[i]._id.valueOf() == landID) {
+    for (let i = 0; i < foundUserPromise.association.expenditureList.length; i++) {
+      if (foundUserPromise.association.expenditureList[i]._id.valueOf() == expenditureID) {
         index = i;
       }
     }
 
     if (index != null) {
-      foundUserPromise.landList.splice(index, 1);
-      await userDB.findByIdAndUpdate(userID, foundUserPromise).catch( (err) => {
+      foundUserPromise.association.expenditureList.splice(index, 1);
+      await userDB.findByIdAndUpdate(userID, foundUserPromise).catch((err) => {
         throw new Error(err);
       });
       return true;
     } else {
       return false;
     }
-  }
-
-  async addLotToUser(id: string, landID: string, lot: Lot): Promise<Lot> {
-    const lotModel: ILotModel = LotMapper.domain2Model(lot);
-
-    const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
-      throw new Error(err);
-    });
-
-    for (let element of foundUserPromise.landList) {
-      if (element._id.valueOf() == landID) {
-        element.lotList.push(lotModel);
-      }
-    }
-
-    await userDB.findByIdAndUpdate(id, foundUserPromise).catch( (err) => {
-      throw new Error(err);
-    });
-
-    return LotMapper.model2Domain(lotModel);
-  }
-
-  async updateUserLot(id: string, landID: string, lot: Lot): Promise<Lot> {
-    const lotModel: ILotModel = LotMapper.domain2Model(lot);
-
-    const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
-      throw new Error(err);
-    });
-
-    for (let land of foundUserPromise.landList) {
-      if (land._id.valueOf() == landID) {
-        for (let lot of land.lotList) {
-          if (lot._id.valueOf() == lotModel.id) {
-            lot.name = lotModel.name;
-            lot.description = lotModel.description;
-            lot.equipmentList = lotModel.equipmentList;
-            lot.minimumHumidity = lotModel.minimumHumidity;
-            lot.maximumHumidity = lotModel.maximumHumidity;
-            lot.currentHumidity = lotModel.currentHumidity;
-            lot.minimumTemperature = lotModel.minimumTemperature;
-            lot.maximumTemperature = lotModel.maximumTemperature;
-            lot.currentTemperature = lotModel.currentTemperature;
-            lot.cultivation = lotModel.cultivation;
-            break;
-          }
-        }
-        break;
-      }
-    }
-
-    await userDB.findByIdAndUpdate(id, foundUserPromise).catch( (err) => {
-      throw new Error(err);
-    });
-
-    return lot;
-  }
-
-  async findUserLotById(id: string, landID: string, lotID: string): Promise<Lot> {
-    const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
-      throw new Error(err);
-    });
-
-    for (let element of foundUserPromise.landList) {
-      if (element._id.valueOf() == landID) {
-        for (let lot of element.lotList) {
-          if (lot._id.valueOf() == lotID) {
-            return LotMapper.model2Domain(lot);
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
-  async deleteUserLot(userID: string, landID: string, lotID: string): Promise<boolean> {
-    let indexLand: number,
-      indexLot: number = null;
-    const foundUserPromise: IUserModel = await userDB.findById(userID).catch((err) => {
-      throw new Error(err);
-    });
-    for (let i = 0; i < foundUserPromise.landList.length; i++) {
-      if (foundUserPromise.landList[i]._id.valueOf() == landID) {
-        indexLand = i;
-        for (let j = 0; j < foundUserPromise.landList[i].lotList.length; j++) {
-          if (foundUserPromise.landList[i].lotList[j]._id.valueOf() == lotID) {
-            indexLot = j;
-            break;
-          }
-        }
-        break;
-      }
-    }
-
-    if (indexLand != null || indexLot != null) {
-      foundUserPromise.landList[indexLand].lotList.splice(indexLot, 1);
-      await userDB.findByIdAndUpdate(userID, foundUserPromise).catch( (err) => {
-        throw new Error(err);
-      });
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  async addEquipmentToUser(id: string, landID: string, lotID: string, equipment: Equipment): Promise<Equipment> {
-    const equipmentModel: IEquipmentModel = EquipmentMapper.domain2Model(equipment);
-
-    const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
-      throw new Error(err);
-    });
-
-    const land: ILandModel = foundUserPromise.landList.find((land) => {
-      return land._id.valueOf() === landID;
-    });
-
-    const lot: ILotModel = land.lotList.find((lot) => {
-      return lot._id.valueOf() === lotID;
-    });
-
-    lot.equipmentList.push(equipmentModel);
-
-    await userDB.findByIdAndUpdate(id, foundUserPromise).catch( (err) => {
-      throw new Error(err);
-    });
-
-    return EquipmentMapper.model2Domain(equipmentModel);
-  }
-
-  async updateUserEquipment(id: string, landID: string, lotID: string, equipment: Equipment): Promise<Equipment> {
-    const equipmentModel: IEquipmentModel = EquipmentMapper.domain2Model(equipment);
-
-    const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
-      throw new Error(err);
-    });
-
-    const land: ILandModel = foundUserPromise.landList.find((land) => {
-      return land._id.valueOf() === landID;
-    });
-
-    const lot: ILotModel = land.lotList.find((lot) => {
-      return lot._id.valueOf() === lotID;
-    });
-
-    const equipmentToUpdate: IEquipmentModel = lot.equipmentList.find((equipment) => {
-      return equipment._id.valueOf() === equipmentModel.id;
-    });
-
-    equipmentToUpdate.name = equipmentModel.name;
-
-    await userDB.findByIdAndUpdate(id, foundUserPromise).catch( (err) => {
-      throw new Error(err);
-    });
-
-    return equipment;
-  }
-
-  async findUserEquipmentById(id: string, landID: string, lotID: string, equipmentID: string): Promise<Equipment> {
-    const foundUserPromise: IUserModel = await userDB.findById(id).catch((err) => {
-      throw new Error(err);
-    });
-
-    if (foundUserPromise.landList.length == 0) {
-      throw new Error("No lands found for this user.");
-    }
-
-    const land: ILandModel = foundUserPromise.landList.find((land) => {
-      return land._id.valueOf() === landID;
-    });
-
-    if (land.lotList.length == 0) {
-      throw new Error("No lots found for this user.");
-    }
-
-    const lot: ILotModel = land.lotList.find((lot) => {
-      return lot._id.valueOf() === lotID;
-    });
-
-    if (lot.equipmentList.length == 0) {
-      throw new Error("No equipments found for this user.");
-    }
-
-    const equipment: IEquipmentModel = lot.equipmentList.find((equipment) => {
-      return equipment._id.valueOf() === equipmentID;
-    });
-    return EquipmentMapper.model2Domain(equipment);
-  }
-
-  async deleteUserEquipment(userID: string, landID: string, lotID: string, equipmentID: string): Promise<boolean> {
-    const foundUserPromise: IUserModel = await userDB.findById(userID).catch((err) => {
-      throw new Error(err);
-    });
-
-    const land: ILandModel = foundUserPromise.landList.find((land) => {
-      return land._id.valueOf() === landID;
-    });
-
-    const lot: ILotModel = land.lotList.find((lot) => {
-      return lot._id.valueOf() === lotID;
-    });
-
-    const equipmentIndex: number = lot.equipmentList.findIndex((equipment) => {
-      return equipment._id.valueOf() === equipmentID;
-    });
-
-    const result: IEquipmentModel[] = lot.equipmentList.splice(equipmentIndex, 1);
-
-    await userDB.findByIdAndUpdate(userID, foundUserPromise).catch( (err) => {
-      throw new Error(err);
-    });
-
-    return result.length > 0;
   }
 }

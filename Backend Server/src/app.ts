@@ -2,6 +2,7 @@ import express from "express";
 
 import * as bodyParser from "body-parser";
 import { userRoutes } from "./Routes/UserRoutes";
+import { associationRoutes } from "./Routes/AssociationRoutes";
 
 export class App {
   public app: express.Application;
@@ -15,12 +16,12 @@ export class App {
     this.app.set("port", 8080);
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
-    this.app.use("/users", userRoutes);
+    this.app.use("/users", [userRoutes, associationRoutes]);
     this.app.disable("etag");
   }
 
   start() {
-    this.app.listen((process.env.PORT || 8080), () => {
+    this.app.listen(process.env.PORT || 8080, () => {
       console.log("Server running in port " + this.app.get("port"));
     });
   }

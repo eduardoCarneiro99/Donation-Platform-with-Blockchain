@@ -1,8 +1,5 @@
-import { Equipment } from "../../Domain/Land/Equipment";
-import { Land } from "../../Domain/Land/Land";
-import { Lot } from "../../Domain/Land/Lot";
+import { Expenditure } from "../../Domain/User/Expenditure";
 import { User } from "../../Domain/User/User";
-import { EquipmentDTO } from "../../DTO/EquipmentDTO";
 import { IRepository } from "./IRepository";
 
 export interface IUserRepository extends IRepository {
@@ -10,27 +7,11 @@ export interface IUserRepository extends IRepository {
 
   deleteUser(id: string): Promise<boolean>;
 
-  addLandToUser(id: String, land: Land): Promise<Land>;
+  addExpenditureToUser(id: String, expenditure: Expenditure): Promise<Expenditure>;
 
-  updateUserLand(id: String, land: Land): Promise<Land>;
+  updateUserExpenditure(id: String, expenditure: Expenditure): Promise<Expenditure>;
 
-  findUserLandById(userID: string, landID: string): Promise<Land>;
+  findUserExpenditureById(userID: string, expenditureID: string): Promise<Expenditure>;
 
-  deleteUserLand(userID: string, landID: string): Promise<boolean>;
-
-  addLotToUser(id: string, landID: string, lot: Lot): Promise<Lot>;
-
-  updateUserLot(id: string, landID: string, lot: Lot): Promise<Lot>;
-
-  findUserLotById(id: string, landID: string, lotID: string): Promise<Lot>;
-
-  deleteUserLot(userID: string, landID: string, lotID: string): Promise<boolean>;
-
-  addEquipmentToUser(id: string, landID: string, lotID: string, equipment: Equipment): Promise<Equipment>;
-
-  updateUserEquipment(id: string, landID: string, lotID: string, equipment: Equipment): Promise<Equipment>;
-
-  findUserEquipmentById(userID: string, landID: string, lotID: string, equipmentID: string): Promise<Equipment>;
-
-  deleteUserEquipment(userID: string, landID: string, lotID: string, equipmentID: string): Promise<boolean>;
+  deleteUserExpenditure(userID: string, expenditureID: string): Promise<boolean>;
 }
