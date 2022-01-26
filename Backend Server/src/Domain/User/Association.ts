@@ -7,7 +7,7 @@ import { Expenditure } from "./Expenditure";
 export class Association extends User {
   private description: string;
 
-  private donationsCounter: number;
+  private donationsReceivedCounter: number;
 
   private totalCoinReceived: number;
 
@@ -20,13 +20,13 @@ export class Association extends User {
     password: Password,
     email: Email,
     role: string,
-    counter: number,
+    donationsReceivedCounter: number,
     totalCoinReceived: number,
     expendituresList: Array<Expenditure>
   ) {
     super(id, name, password, email, role);
     this.description = description;
-    this.donationsCounter = counter;
+    this.donationsReceivedCounter = donationsReceivedCounter;
     this.totalCoinReceived = totalCoinReceived;
     this.expendituresList = expendituresList;
   }
@@ -51,8 +51,8 @@ export class Association extends User {
     return this.description;
   }
 
-  public getDonationsCounter(): number {
-    return this.donationsCounter;
+  public getDonationsReceivedCounter(): number {
+    return this.donationsReceivedCounter;
   }
 
   public getTotalCoinReceived(): number {

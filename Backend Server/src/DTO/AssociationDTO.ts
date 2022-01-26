@@ -7,7 +7,7 @@ export class AssociationDTO {
   public password: string;
   public email: string;
   public description: string;
-  public donationsCounter: number;
+  public donationsReceivedCounter: number;
   public totalCoinReceived: number;
   public expenditureList: Array<ExpenditureDTO>;
 
@@ -18,7 +18,7 @@ export class AssociationDTO {
     password: string,
     email: string,
     description: string,
-    donationsCounter: number,
+    donationsReceivedCounter: number,
     totalCoinReceived: number,
     expenditureList: Array<ExpenditureDTO>
   ) {
@@ -28,7 +28,7 @@ export class AssociationDTO {
     this.password = password;
     this.email = email;
     this.description = description;
-    this.donationsCounter = donationsCounter;
+    this.donationsReceivedCounter = donationsReceivedCounter;
     this.totalCoinReceived = totalCoinReceived;
     this.expenditureList = expenditureList;
   }

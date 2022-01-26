@@ -5,7 +5,7 @@ export class DonatorDTO {
   public password: string;
   public email: string;
   public country: string;
-  public donationsCounter: number;
+  public donationsSentCounter: number;
   public totalCoinDonated: number;
 
   constructor(
@@ -15,7 +15,7 @@ export class DonatorDTO {
     password: string,
     email: string,
     country: string,
-    donationsCounter: number,
+    donationsSentCounter: number,
     totalCoinDonated: number
   ) {
     this.id = id;
@@ -24,7 +24,7 @@ export class DonatorDTO {
     this.password = password;
     this.email = email;
     this.country = country;
-    this.donationsCounter = donationsCounter;
+    this.donationsSentCounter = donationsSentCounter;
     this.totalCoinDonated = totalCoinDonated;
   }
 }

@@ -6,7 +6,7 @@ import { User } from "./User";
 export class Donator extends User {
   private country: string;
 
-  private donationsCounter: number;
+  private donationsSentCounter: number;
 
   private totalCoinDonated: number;
 
@@ -17,12 +17,12 @@ export class Donator extends User {
     password: Password,
     email: Email,
     role: string,
-    counter: number,
+    donationsSentCounter: number,
     totalCoinDonated: number
   ) {
     super(id, name, password, email, role);
     this.country = country;
-    this.donationsCounter = counter;
+    this.donationsSentCounter = donationsSentCounter;
     this.totalCoinDonated = totalCoinDonated;
   }
 
@@ -46,8 +46,8 @@ export class Donator extends User {
     return this.country;
   }
 
-  public getDonationsCounter(): number {
-    return this.donationsCounter;
+  public getDonationsSentCounter(): number {
+    return this.donationsSentCounter;
   }
 
   public getTotalCoinDonated(): number {
