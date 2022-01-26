@@ -106,7 +106,7 @@ export class UserMapper {
     var userDomain;
     if (role === "donator") {
       userDomain = new Donator(
-        userModel.id,
+        userModel._id.valueOf(),
         userModel.donator.country,
         new Name(userModel.name),
         new Password(userModel.password),
@@ -117,7 +117,7 @@ export class UserMapper {
       );
     } else {
       userDomain = new Association(
-        userModel.id,
+        userModel._id.valueOf(),
         userModel.association.description,
         new Name(userModel.name),
         new Password(userModel.password),

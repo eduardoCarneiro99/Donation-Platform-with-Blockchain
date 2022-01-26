@@ -43,7 +43,7 @@ export class DonationMapper {
 
   static model2Domain(donationModel: IDonationModel): Donation {
     let donation = new Donation(
-      donationModel.id,
+      donationModel._id.valueOf(),
       donationModel.value,
       donationModel.description,
       new Date(donationModel.date),

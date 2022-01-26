@@ -3,6 +3,7 @@ import express from "express";
 import * as bodyParser from "body-parser";
 import { userRoutes } from "./Routes/UserRoutes";
 import { associationRoutes } from "./Routes/AssociationRoutes";
+import { donationRoutes } from "./Routes/DonationRoutes";
 
 export class App {
   public app: express.Application;
@@ -17,6 +18,7 @@ export class App {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use("/users", [userRoutes, associationRoutes]);
+    this.app.use("/donation", donationRoutes);
     this.app.disable("etag");
   }
 

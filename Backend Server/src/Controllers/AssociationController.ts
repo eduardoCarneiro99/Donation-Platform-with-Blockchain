@@ -46,6 +46,17 @@ export class AssociationController {
       });
   }
 
+  async getExpenditureListByAssociationID(req: Request, res: Response) {
+    await this.associationService
+      .getAssociationExpenditureListByAssociationID(req.params.userID)
+      .then((expenditureDTOList) => {
+        return res.status(200).json(expenditureDTOList);
+      })
+      .catch((err) => {
+        res.status(400).type("text").send(err.message);
+      });
+  }
+
   async deleteExpenditure(req: Request, res: Response) {
     await this.associationService
       .deleteAssociationExpenditure(req.params.userID, req.params.expenditureID)

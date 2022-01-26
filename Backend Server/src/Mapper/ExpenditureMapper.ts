@@ -31,7 +31,7 @@ export class ExpenditureMapper {
 
   static model2Domain(expenditureModel: IExpenditureModel): Expenditure {
     let expenditure = new Expenditure(
-      expenditureModel.id,
+      expenditureModel._id.valueOf(),
       expenditureModel.value,
       expenditureModel.justification,
       new Date(expenditureModel.date),

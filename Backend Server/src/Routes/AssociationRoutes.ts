@@ -22,6 +22,9 @@ class AssociationRoutes {
     this.router.get("/:userID/expenditure/:expenditureID", (req: express.Request, res: express.Response) =>
       this.associationController.getExpenditureByID(req, res)
     );
+    this.router.get("/:userID/expenditureList", (req: express.Request, res: express.Response) =>
+      this.associationController.getExpenditureListByAssociationID(req, res)
+    );
     this.router.delete("/:userID/expenditure/:expenditureID", (req: express.Request, res: express.Response) =>
       this.associationController.deleteExpenditure(req, res)
     );

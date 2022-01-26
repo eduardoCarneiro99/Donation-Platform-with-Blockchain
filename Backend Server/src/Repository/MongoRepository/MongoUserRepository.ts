@@ -137,4 +137,20 @@ export class MongoUserRepository implements IUserRepository {
       return false;
     }
   }
+
+  async updateUsersDonations(donatorID: string, associationID: string, value: number): Promise<boolean> {
+    let donator: IUserModel = await userDB.findById(donatorID);
+    let association: IUserModel = await userDB.findById(associationID);
+    donator.donator.totalCoinDonated+= value;
+    donator.donator.donationsSentCounter++;
+    association.association.totalCoinReceived+= value;
+    association.association.donationsReceivedCounter++;
+    await userDB.findByIdAndUpdate(donatorID, donator).catch( (err) => {
+      throw new Error(err);
+    });
+    await userDB.findByIdAndUpdate(associationID, association).catch( (err) => {
+      throw new Error(err);
+    });
+    return true;
+  }
 }

@@ -7,6 +7,7 @@ import { TYPES } from "../InversifyConfig/types";
 import { ExpenditureDTO } from "../DTO/ExpenditureDTO";
 import { Expenditure } from "../Domain/User/Expenditure";
 import { ExpenditureMapper } from "../Mapper/ExpenditureMapper";
+import { Association } from "../Domain/User/Association";
 
 export class AssociationService {
   private userRepository: IUserRepository;
@@ -36,6 +37,13 @@ export class AssociationService {
     );
     const expenditureResponseDTO: ExpenditureDTO = ExpenditureMapper.domain2Dto(expenditureResponseDomain);
     return expenditureResponseDTO;
+  }
+
+  async getAssociationExpenditureListByAssociationID(userID: string): Promise<Array<ExpenditureDTO>> {
+    const association: Association = await this.userRepository.findById(
+      userID,
+    );
+    return association.getExpenditureList().map<ExpenditureDTO>((expenditure) => ExpenditureMapper.domain2Dto(expenditure));
   }
 
   async deleteAssociationExpenditure(userID: string, expenditureID: string): Promise<boolean> {

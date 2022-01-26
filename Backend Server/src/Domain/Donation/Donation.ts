@@ -49,4 +49,8 @@ export class Donation extends Entity {
   public getAssociationId(): string {
     return this.associationId;
   }
+
+  public setTransactionId(transactionId: string): void {
+    this.transactionId = transactionId;
+  }
 }

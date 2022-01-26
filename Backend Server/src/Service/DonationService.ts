@@ -1,68 +1,50 @@
-/*
-async addLotByUserIDLandID(id: string, landID: string, lotDTO: LotDTO): Promise<LotDTO> {
-    const lot: Lot = LotMapper.dto2Domain(lotDTO);
-    const lotResponse: Lot = await this.userRepository.addLotToUser(id, landID, lot);
-    const lotResponseDTO: LotDTO = LotMapper.domain2Dto(lotResponse);
-    return lotResponseDTO;
+import { Container, injectable } from "inversify";
+import { TYPES } from "../InversifyConfig/types";
+import { DonationDTO } from "../DTO/DonationDTO";
+import { Donation } from "../Domain/Donation/Donation";
+import { DonationMapper } from "../Mapper/DonationMapper";
+import { IDonationRepository } from "../Repository/InterfacesRepository/IDonationRepository";
+import { IUserRepository } from "../Repository/InterfacesRepository/IUserRepository";
+
+export class DonationService {
+  private donationRepository: IDonationRepository;
+  private userRepository: IUserRepository;
+
+  constructor(container: Container) {
+    this.donationRepository = container.get<IDonationRepository>(TYPES.DonationRepository);
+    this.userRepository = container.get<IUserRepository>(TYPES.UserRepository);
   }
 
-  async updateUserLotByUserIDLandID(id: string, landID: string, lotDTO: LotDTO): Promise<LotDTO> {
-    const lot: Lot = LotMapper.dto2Domain(lotDTO);
-    const lotResponse: Lot = await this.userRepository.updateUserLot(id, landID, lot);
-    const lotResponseDTO: LotDTO = LotMapper.domain2Dto(lotResponse);
-    return lotResponseDTO;
+  async donate(donationDTO: DonationDTO): Promise<DonationDTO> {
+    const donation: Donation = DonationMapper.dto2Domain(donationDTO);
+    //TODO: ACTUALLY MAKE THE TRANSACTION
+    let donationHash: string = "Hash completamente legit"; //TODO: GET THE HASH FROM THE WEB3 SCRIPT
+    donation.setTransactionId(donationHash);
+    const donationResponse: Donation = await this.donationRepository.save(donation);
+    await this.userRepository.updateUsersDonations(donation.getDonatorID(), donation.getAssociationId(), donation.getValue());
+    const donationResponseDTO: DonationDTO = DonationMapper.domain2Dto(donationResponse);
+    return donationResponseDTO;
   }
 
-  async getUserLotByUserIDLandID(userID: string, landID: string, lotID: string): Promise<LotDTO> {
-    const lotResponseDomain: Lot = await this.userRepository.findUserLotById(userID, landID, lotID);
-    const lotResponseDTO: LotDTO = LotMapper.domain2Dto(lotResponseDomain);
-    return lotResponseDTO;
+  async getDonationByID(id: string): Promise<DonationDTO> {
+    const donationResponse: Donation = await this.donationRepository.findById(id);
+    const donationResponseDTO: DonationDTO = DonationMapper.domain2Dto(donationResponse);
+    return donationResponseDTO;
   }
 
-  async deleteUserLot(userID: string, landID: string, lotID: string): Promise<boolean> {
-    return await this.userRepository.deleteUserLot(userID, landID, lotID);
+  async getDonationsByDonatorID(id: string): Promise<Array<DonationDTO>> {
+    const donationsResponse: Array<Donation> = await this.donationRepository.getDonationsByDonatorID(id);
+    const donationsResponseDTO: Array<DonationDTO> = donationsResponse.map<DonationDTO>((donation) => DonationMapper.domain2Dto(donation));
+    return donationsResponseDTO;
   }
 
-  async addEquipmentByUserIDLandIDLotID(
-    id: string,
-    landID: string,
-    lotID: string,
-    equipmentDTO: EquipmentDTO
-  ): Promise<EquipmentDTO> {
-    const equipment: Equipment = EquipmentMapper.dto2Domain(equipmentDTO);
-    const equipmentResponse: Equipment = await this.userRepository.addEquipmentToUser(id, landID, lotID, equipment);
-    const equipmentResponseDTO: EquipmentDTO = EquipmentMapper.domain2Dto(equipmentResponse);
-    return equipmentResponseDTO;
+  async getDonationsByAssociationID(id: string): Promise<Array<DonationDTO>> {
+    const donationsResponse: Array<Donation> = await this.donationRepository.getDonationsByAssociationID(id);
+    const donationsResponseDTO: Array<DonationDTO> = donationsResponse.map<DonationDTO>((donation) => DonationMapper.domain2Dto(donation));
+    return donationsResponseDTO;
   }
 
-  async updateEquipmentByUserIDLandIDLotID(
-    id: string,
-    landID: string,
-    lotID: string,
-    equipmentDTO: EquipmentDTO
-  ): Promise<EquipmentDTO> {
-    const equipment: Equipment = EquipmentMapper.dto2Domain(equipmentDTO);
-    const equipmentResponse: Equipment = await this.userRepository.updateUserEquipment(id, landID, lotID, equipment);
-    const equipmentResponseDTO: EquipmentDTO = EquipmentMapper.domain2Dto(equipmentResponse);
-    return equipmentResponseDTO;
+  async deleteDonation(id: string): Promise<boolean> {
+    return this.donationRepository.deleteDonation(id);
   }
-
-  async getEquipmentByUserIDLandIDLotIDEquipmentID(
-    userID: string,
-    landID: string,
-    lotID: string,
-    equipmentID: string
-  ): Promise<EquipmentDTO> {
-    const equipmentResponseDomain: Equipment = await this.userRepository.findUserEquipmentById(
-      userID,
-      landID,
-      lotID,
-      equipmentID
-    );
-    const equipmentResponseDTO: EquipmentDTO = EquipmentMapper.domain2Dto(equipmentResponseDomain);
-    return equipmentResponseDTO;
-  }
-
-  async deleteEquipment(userID: string, landID: string, lotID: string, equipmentID: string): Promise<boolean> {
-    return await this.userRepository.deleteUserEquipment(userID, landID, lotID, equipmentID);
-  }*/
+}
