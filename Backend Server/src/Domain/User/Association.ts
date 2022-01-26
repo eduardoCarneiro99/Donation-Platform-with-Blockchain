@@ -20,11 +20,13 @@ export class Association extends User {
     password: Password,
     email: Email,
     role: string,
+    publicAddress: string,
+    currentEther: number,
     donationsReceivedCounter: number,
     totalCoinReceived: number,
     expendituresList: Array<Expenditure>
   ) {
-    super(id, name, password, email, role);
+    super(id, name, password, email, role, publicAddress, currentEther);
     this.description = description;
     this.donationsReceivedCounter = donationsReceivedCounter;
     this.totalCoinReceived = totalCoinReceived;

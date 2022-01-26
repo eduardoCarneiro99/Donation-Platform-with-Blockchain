@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserDTO } from "../DTO/UserDTO";
 import { UserService } from "../Service/UserService";
 import { Container } from "inversify";
+import { visitFunctionBody } from "typescript";
 
 export class UserController {
   private userService: UserService;
@@ -64,5 +65,35 @@ export class UserController {
         res.status(400).json({ message: "User not found." });
       }
     });
+  }
+
+  async addFunds(req: Request, res: Response) {
+    await this.userService
+      .addFunds(req.params.id, req.body.amount)
+      .then((answer) => {
+        if (answer === true) {
+          res.status(200).json({ message: "Added " + req.body.amount + " ether to your account."});
+        } else {
+          res.status(400).json({ message: "Could not add funds." });
+        }
+      })
+      .catch((err) => {
+        res.status(400).type("text").send(err.message);
+      });
+  }
+
+  async withdrawFunds(req: Request, res: Response) {
+    await this.userService
+      .withdrawFunds(req.params.id, req.body.amount)
+      .then((answer) => {
+        if (answer === true) {
+          res.status(200).json({ message: "Withdrew " + req.body.amount + " from your account."});
+        } else {
+          res.status(400).json({ message: "Could not add funds." });
+        }
+      })
+      .catch((err) => {
+        res.status(400).type("text").send(err.message);
+      });
   }
 }

@@ -53,4 +53,8 @@ export class Donation extends Entity {
   public setTransactionId(transactionId: string): void {
     this.transactionId = transactionId;
   }
+
+  public setDate(date: Date): void {
+    this.date = date;
+  }
 }

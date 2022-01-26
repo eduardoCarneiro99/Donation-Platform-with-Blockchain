@@ -17,10 +17,12 @@ export class Donator extends User {
     password: Password,
     email: Email,
     role: string,
+    publicAddress: string,
+    currentEther: number,
     donationsSentCounter: number,
     totalCoinDonated: number
   ) {
-    super(id, name, password, email, role);
+    super(id, name, password, email, role, publicAddress, currentEther);
     this.country = country;
     this.donationsSentCounter = donationsSentCounter;
     this.totalCoinDonated = totalCoinDonated;

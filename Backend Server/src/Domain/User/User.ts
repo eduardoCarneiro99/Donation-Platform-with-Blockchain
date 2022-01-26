@@ -12,12 +12,18 @@ export class User extends AggregateRoot {
 
   private role: string;
 
-  constructor(id: string, name: Name, password: Password, email: Email, role: string) {
+  private publicAddress: string;
+
+  private currentEther: number;
+
+  constructor(id: string, name: Name, password: Password, email: Email, role: string, publicAddress, currentEther: number) {
     super(id);
     this.name = name;
     this.password = password;
     this.email = email;
     this.role = role;
+    this.publicAddress = publicAddress;
+    this.currentEther = currentEther;
   }
 
   public getID(): string {
@@ -38,5 +44,17 @@ export class User extends AggregateRoot {
 
   public getRole(): string {
     return this.role;
+  }
+
+  public getPublicAddress(): string {
+    return this.publicAddress;
+  }
+
+  public getCurrentEther(): number {
+    return this.currentEther;
+  }
+
+  public setPublicAddress(publicAddress: string): void {
+    this.publicAddress = publicAddress;
   }
 }

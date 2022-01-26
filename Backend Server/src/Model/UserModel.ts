@@ -8,6 +8,8 @@ export interface IUserModel extends Document {
   password: string;
   email: string;
   role: string;
+  publicAddress: string, 
+  currentEther: number,
   donator: IDonatorModel;
   association: IAssociationModel;
 }
@@ -30,6 +32,8 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   role: { type: String, required: true },
+  publicAddress: { type: String, required: true },
+  currentEther: { type: Number, required: true },
   donator: donatorSchema,
   association: associationSchema,
 });

@@ -1,5 +1,6 @@
 import { App } from "./app";
 import connectMongoDB from "./database-mongo";
+import { Web3Service } from "./Web3/Web3Service";
 
 connectMongoDB();
 const app = new App();

@@ -21,6 +21,8 @@ export class UserMapper {
       body.password,
       body.email,
       body.role,
+      body.publicAddress,
+      body.currentEther,
       body.country,
       body.donationsSentCounter,
       body.totalCoinDonated,
@@ -42,6 +44,8 @@ export class UserMapper {
         new Password(userDTO.password),
         new Email(userDTO.email),
         userDTO.role,
+        userDTO.publicAddress,
+        userDTO.currentEther,
         userDTO.donationsSentCounter,
         userDTO.totalCoinDonated
       );
@@ -53,6 +57,8 @@ export class UserMapper {
         new Password(userDTO.password),
         new Email(userDTO.email),
         userDTO.role,
+        userDTO.publicAddress,
+        userDTO.currentEther,
         userDTO.donationsReceivedCounter,
         userDTO.totalCoinReceived,
         userDTO.expenditureList.map<Expenditure>((expenditure) => ExpenditureMapper.dto2Domain(expenditure))
@@ -72,6 +78,8 @@ export class UserMapper {
         password: donator.getPassword().getPassword(),
         email: donator.getEmail().getEmail(),
         role: donator.getRole(),
+        publicAddress: donator.getPublicAddress(),
+        currentEther: donator.getCurrentEther(),
         donator: new DonatorModel({
           country: donator.getCountry(),
           donationsSentCounter: donator.getDonationsSentCounter(),
@@ -87,6 +95,8 @@ export class UserMapper {
         password: association.getPassword().getPassword(),
         email: association.getEmail().getEmail(),
         role: association.getRole(),
+        publicAddress: association.getPublicAddress(),
+        currentEther: association.getCurrentEther(),
         donator: null,
         association: new AssociationModel({
           description: association.getDescription(),
@@ -112,6 +122,8 @@ export class UserMapper {
         new Password(userModel.password),
         new Email(userModel.email),
         userModel.role,
+        userModel.publicAddress,
+        userModel.currentEther,
         userModel.donator.donationsSentCounter,
         userModel.donator.totalCoinDonated
       );
@@ -123,6 +135,8 @@ export class UserMapper {
         new Password(userModel.password),
         new Email(userModel.email),
         userModel.role,
+        userModel.publicAddress,
+        userModel.currentEther,
         userModel.association.donationsReceivedCounter,
         userModel.association.totalCoinReceived,
         userModel.association.expenditureList.map<Expenditure>((expenditureModel) =>
@@ -144,6 +158,8 @@ export class UserMapper {
         donator.getPassword().getPassword(),
         donator.getEmail().getEmail(),
         donator.getRole(),
+        donator.getPublicAddress(),
+        donator.getCurrentEther(),
         donator.getCountry(),
         donator.getDonationsSentCounter(),
         donator.getTotalCoinDonated(),
@@ -160,6 +176,8 @@ export class UserMapper {
         association.getPassword().getPassword(),
         association.getEmail().getEmail(),
         association.getRole(),
+        association.getPublicAddress(),
+        association.getCurrentEther(),
         null,
         null,
         null,

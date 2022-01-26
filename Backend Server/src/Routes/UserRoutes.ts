@@ -22,6 +22,8 @@ class UserRoutes {
     this.router.delete("/:id", (req: express.Request, res: express.Response) =>
       this.userController.deleteUser(req, res)
     );
+    this.router.post("/:id/addFunds", (req: express.Request, res: express.Response) => this.userController.addFunds(req, res));
+    this.router.post("/:id/withdrawFunds", (req: express.Request, res: express.Response) => this.userController.withdrawFunds(req, res));
   }
 }
 

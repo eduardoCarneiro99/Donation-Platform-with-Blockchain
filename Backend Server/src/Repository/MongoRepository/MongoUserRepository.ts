@@ -29,6 +29,15 @@ export class MongoUserRepository implements IUserRepository {
 
   async save(newUser: User): Promise<User> {
     const user: IUserModel = UserMapper.domain2Model(newUser);
+    user.currentEther = 0;
+    if (user.role === "donator"){
+      user.donator.totalCoinDonated = 0;
+      user.donator.donationsSentCounter = 0;
+    }else{
+      user.association.totalCoinReceived = 0;
+      user.association.donationsReceivedCounter = 0;
+    }
+    
     await user.validate();
 
     const createdUser: IUserModel = await userDB.create(user);
@@ -143,13 +152,35 @@ export class MongoUserRepository implements IUserRepository {
     let association: IUserModel = await userDB.findById(associationID);
     donator.donator.totalCoinDonated+= value;
     donator.donator.donationsSentCounter++;
+    donator.currentEther-= value;
     association.association.totalCoinReceived+= value;
     association.association.donationsReceivedCounter++;
+    association.currentEther+= value;
     await userDB.findByIdAndUpdate(donatorID, donator).catch( (err) => {
       throw new Error(err);
     });
     await userDB.findByIdAndUpdate(associationID, association).catch( (err) => {
       throw new Error(err);
+    });
+    return true;
+  }
+
+  async addFunds(user: User, amount: number): Promise<boolean> {
+    let userId: string = user.getID();
+    let userModel: IUserModel = await userDB.findById(userId);
+    userModel.currentEther+= amount;
+    await userDB.findByIdAndUpdate(userId, userModel).catch((err) => {
+      return false;
+    });
+    return true;
+  }
+
+  async withdrawFunds(user: User, amount: number): Promise<boolean> {
+    let userId: string = user.getID();
+    let userModel: IUserModel = await userDB.findById(userId);
+    userModel.currentEther < amount ? userModel.currentEther = 0 : userModel.currentEther-= amount;
+    await userDB.findByIdAndUpdate(userId, userModel).catch((err) => {
+      return false;
     });
     return true;
   }

@@ -16,4 +16,8 @@ export interface IUserRepository extends IRepository {
   deleteUserExpenditure(userID: string, expenditureID: string): Promise<boolean>;
 
   updateUsersDonations(donatorID: string, associationID: string, value: number): Promise<boolean>;
+
+  addFunds(user: User, amount: number): Promise<boolean>
+
+  withdrawFunds(user: User, amount: number): Promise<boolean>
 }
