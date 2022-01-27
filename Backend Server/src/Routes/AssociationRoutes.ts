@@ -16,6 +16,7 @@ class AssociationRoutes {
     this.router.post("/:id/expenditure", (req: express.Request, res: express.Response) =>
       this.associationController.addExpenditure(req, res)
     );
+    this.router.get("/associations/list", (req: express.Request, res: express.Response) => this.associationController.getAssociations(req, res));
     this.router.put("/:id/expenditure", (req: express.Request, res: express.Response) =>
       this.associationController.updateExpenditure(req, res)
     );

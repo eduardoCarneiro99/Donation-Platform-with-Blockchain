@@ -27,6 +27,15 @@ export class MongoUserRepository implements IUserRepository {
     return userDomainRet;
   }
 
+  async getAssociations(): Promise<Array<User>> {
+    const foundAssociations: Array<IUserModel> = await userDB.find({ role: "association" });
+    if (foundAssociations == undefined) {
+      throw new Error("No associations found.");
+    }
+    const associationsDomainList: Array<User> = foundAssociations.map<User>((userModel) => UserMapper.model2Domain(userModel));
+    return associationsDomainList;
+  }
+
   async save(newUser: User): Promise<User> {
     const user: IUserModel = UserMapper.domain2Model(newUser);
     user.currentEther = 0;

@@ -3,6 +3,8 @@ import { User } from "../../Domain/User/User";
 import { IRepository } from "./IRepository";
 
 export interface IUserRepository extends IRepository {
+  getAssociations(): Promise<Array<User>>;
+
   findByEmail(email: string): Promise<User>;
 
   deleteUser(id: string): Promise<boolean>;

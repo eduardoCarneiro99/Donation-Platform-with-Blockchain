@@ -16,6 +16,11 @@ export class AssociationService {
     this.userRepository = container.get<IUserRepository>(TYPES.UserRepository);
   }
 
+  async getAssociations(): Promise<Array<UserDTO>> {
+    const associations: Array<User> = await this.userRepository.getAssociations();
+    return associations.map<UserDTO>((association) => UserMapper.domain2Dto(association));
+  }
+
   async addExpenditureByAssociationID(id: string, expenditureDTO: ExpenditureDTO): Promise<ExpenditureDTO> {
     const expenditure: Expenditure = ExpenditureMapper.dto2Domain(expenditureDTO);
     const expenditureResponse: Expenditure = await this.userRepository.addExpenditureToUser(id, expenditure);
