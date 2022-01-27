@@ -11,6 +11,17 @@ export class AssociationController {
     this.associationService = new AssociationService(container);
   }
 
+  async getAssociations(req: Request, res: Response) {
+    await this.associationService
+      .getAssociations()
+      .then((response) => {
+        return res.status(200).json(response);
+      })
+      .catch((err) => {
+        res.status(400).type("text").send(err.message);
+      });
+  }
+
   async addExpenditure(req: Request, res: Response) {
     var expenditureDTO: ExpenditureDTO = req.body;
     await this.associationService
