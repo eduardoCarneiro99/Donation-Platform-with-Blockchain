@@ -8,12 +8,15 @@ import { ExpenditureDTO } from "../DTO/ExpenditureDTO";
 import { Expenditure } from "../Domain/User/Expenditure";
 import { ExpenditureMapper } from "../Mapper/ExpenditureMapper";
 import { Association } from "../Domain/User/Association";
+import { Web3Service } from "../Web3/Web3Service";
 
 export class AssociationService {
   private userRepository: IUserRepository;
+  private web3Service: Web3Service;
 
   constructor(container: Container) {
     this.userRepository = container.get<IUserRepository>(TYPES.UserRepository);
+    this.web3Service = new Web3Service();
   }
 
   async getAssociations(): Promise<Array<UserDTO>> {
@@ -23,6 +26,8 @@ export class AssociationService {
 
   async addExpenditureByAssociationID(id: string, expenditureDTO: ExpenditureDTO): Promise<ExpenditureDTO> {
     const expenditure: Expenditure = ExpenditureMapper.dto2Domain(expenditureDTO);
+    const association: User = await this.userRepository.findById(id);
+    await this.web3Service.sendTransactionFromUserToAdmin(association.getPublicAddress(), association.getPassword().getPassword(), expenditure.getValue().toString());
     const expenditureResponse: Expenditure = await this.userRepository.addExpenditureToUser(id, expenditure);
     const expenditureResponseDTO: ExpenditureDTO = ExpenditureMapper.domain2Dto(expenditureResponse);
     return expenditureResponseDTO;
