@@ -34,13 +34,13 @@ const InstitutionProfile = () => {
                 console.log(error)
             });
 
-            axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/association/' + id, {}, {}).then((response) => {
-                console.log(response)
-                setDonations(response.data)
-            })
-                .catch((error) => {
-                    console.log(error)
-                });
+        axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/association/' + id, {}, {}).then((response) => {
+            console.log(response)
+            setDonations(response.data)
+        })
+            .catch((error) => {
+                console.log(error)
+            });
     }, [])
 
     const handleSubmit = (event) => {
@@ -52,6 +52,7 @@ const InstitutionProfile = () => {
             "transactionId": transactionID
         }, {}).then((response) => {
             console.log(response)
+            closeModal()
         })
             .catch((error) => {
                 console.log(error)
@@ -71,37 +72,27 @@ const InstitutionProfile = () => {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Add a Transaction"
-                style={{ content: { marginTop: "7%", marginBottom: "7%", marginLeft: "15%", marginRight: "15%" } }}
+                style={{ content: { marginTop: "7%", marginBottom: "7%", marginLeft: "25%", marginRight: "25%" } }}
             >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <h2>Add an Expenditure</h2>
-                    <button onClick={closeModal} style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "7%", height: "50px" }}>Close</button>
+                    <button onClick={closeModal} style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "10%", height: "40px" }}>Close</button>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <label>
-                        TransactionID:
-                        <input type="text" name="transactionID" onChange={(e) => setTransactionID(e.target.value)} />
-                    </label>
-                    <p></p>
-                    <label>
-                        Value:
-                        <input type="text" name="value" onChange={(e) => setValue(e.target.value)} />
-                    </label>
+
+                    <p>
+                        Value (ETH):
+                    </p>
+                    <input type="text" name="value" onChange={(e) => setValue(e.target.value)} />
                     <p></p>
 
-                    <label>
+                    <p>
                         Justification:
-                        <input type="text" name="description" onChange={(e) => setJustification(e.target.value)} />
-                    </label>
+                    </p>
+                    <textarea name="justification" onChange={(e) => setJustification(e.target.value)} style={{ width: "50%", height: '90px' }}> </textarea>
                     <p></p>
 
-                    <label>
-                        Date:
-                        <input type="text" name="date" onChange={(e) => setDate(e.target.value)} />
-                    </label>
-                    <p></p>
-
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Submit" style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "25%", height: "40px" }} />
 
                 </form>
             </Modal>
@@ -117,7 +108,7 @@ const InstitutionProfile = () => {
                     <div style={{ display: "flex", justifyContent: "space-between" }} >
                         <h5>Current Ether:<span style={{ fontWeight: '400' }}> {institution.currentEther}  </span></h5>
                         <h5>Total number of donations received:<span style={{ fontWeight: '400' }}> {institution.donationsReceivedCounter}</span></h5>
-                        <h5>Total value received in donations:<span style={{ fontWeight: '400' }}> {institution.totalCoinReceived} </span></h5>
+                        <h5>Total value received in donations:<span style={{ fontWeight: '400' }}> {institution.totalCoinReceived} ETH</span></h5>
                     </div>
 
                     <h5>Email: <span style={{ fontWeight: '400' }}>{institution.email}</span></h5>

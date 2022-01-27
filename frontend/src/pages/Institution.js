@@ -54,7 +54,7 @@ const Institution = () => {
             "associationId": id
         }, {}).then((response) => {
             console.log(response)
-            // closeModal()
+            closeModal()
         })
             .catch((error) => {
                 console.log(error)
@@ -74,21 +74,22 @@ const Institution = () => {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Make a Donation"
-                style={{ content: { marginTop: "7%", marginBottom: "7%", marginLeft: "15%", marginRight: "15%" } }}
+                style={{ content: { marginTop: "7%", marginBottom: "7%", marginLeft: "25%", marginRight: "25%" } }}
             >
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h2>Make a Donation</h2>
 
-                    <button onClick={closeModal} style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "7%", height: "50px" }}>Close</button>
+                    <button onClick={closeModal} style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "10%", height: "50px" }}>Close</button>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <span>Value:    </span>
+                    <p>Value (ETH):    </p>
                     <input type="number" name="value" onChange={(e) => setValue(e.target.value)} />
                     <p></p>
-                    <span>Description:</span>
-                    <input type="text" name="description" onChange={(e) => setValue(e.target.value)} />
-                    <input type="submit" value="Submit" />
+                    <p>Description:</p>
+                    <textarea name="description" onChange={(e) => setDescription(e.target.value)} style={{width:"50%", height:'90px'}}> </textarea>
+                    <p></p>
+                    <input type="submit" value="Submit" style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "25%", height: "40px" }} />
 
                 </form>
             </Modal>
@@ -103,7 +104,7 @@ const Institution = () => {
                     <div style={{ display: "flex", justifyContent: "space-between" }} >
                         <h5>Current Ether:<span style={{ fontWeight: '400' }}> {institution.currentEther}  </span></h5>
                         <h5>Total number of donations received:<span style={{ fontWeight: '400' }}> {institution.donationsReceivedCounter}</span></h5>
-                        <h5>Total value received in donations:<span style={{ fontWeight: '400' }}> {institution.totalCoinReceived} </span></h5>
+                        <h5>Total value received in donations:<span style={{ fontWeight: '400' }}> {institution.totalCoinReceived} ETH </span></h5>
                     </div>
 
                     <h5>Email: <span style={{ fontWeight: '400' }}>{institution.email}</span></h5>

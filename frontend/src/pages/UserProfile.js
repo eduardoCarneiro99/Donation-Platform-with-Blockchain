@@ -40,11 +40,8 @@ const UserProfile = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + id + '/expenditure', {
-            "value": value,
-            "justification": justification,
-            "date": "Wed Jan 26 2022 15:54:40 GMT+0000 (Western European Standard Time)",
-            "transactionId": transactionID
+        axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + id + '/addFunds', {
+            "amount": value,
         }, {}).then((response) => {
             console.log(response)
         })
@@ -62,14 +59,34 @@ const UserProfile = () => {
                 backgroundColor: "#f2f2f2"
             }}
         >
-            
+             <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Add Funds"
+                style={{ content: { marginTop: "7%", marginBottom: "7%", marginLeft: "25%", marginRight: "25%" } }}
+            >
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h2>Add Funds</h2>
+
+                    <button onClick={closeModal} style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "10%", height: "50px" }}>Close</button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <p>Value (ETH):    </p>
+                    <input type="number" name="value" onChange={(e) => setValue(e.target.value)} />
+                    <p></p>
+                    <input type="submit" value="Submit" style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "25%", height: "40px" }} />
+
+                </form>
+            </Modal>
+
             {user != null ?
                 <>
 
                     <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2%" }}>
                         <h2>{user.name}</h2>
                         <button onClick={openModal} style={{ backgroundColor: "#3c3c3c", color: "#fff", width: "7%", height: "50px" }}>
-                            Edit Profile
+                            Add Funds
                         </button>
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between" }} >
