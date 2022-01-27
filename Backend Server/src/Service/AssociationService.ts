@@ -27,7 +27,8 @@ export class AssociationService {
   async addExpenditureByAssociationID(id: string, expenditureDTO: ExpenditureDTO): Promise<ExpenditureDTO> {
     const expenditure: Expenditure = ExpenditureMapper.dto2Domain(expenditureDTO);
     const association: User = await this.userRepository.findById(id);
-    await this.web3Service.sendTransactionFromUserToAdmin(association.getPublicAddress(), association.getPassword().getPassword(), expenditure.getValue().toString());
+    const hash: string = await this.web3Service.sendTransactionFromUserToAdmin(association.getPublicAddress(), association.getPassword().getPassword(), expenditure.getValue().toString());
+    expenditure.setTransactionId(hash);
     const expenditureResponse: Expenditure = await this.userRepository.addExpenditureToUser(id, expenditure);
     const expenditureResponseDTO: ExpenditureDTO = ExpenditureMapper.domain2Dto(expenditureResponse);
     return expenditureResponseDTO;

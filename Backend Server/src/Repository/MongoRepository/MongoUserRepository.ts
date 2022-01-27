@@ -88,6 +88,7 @@ export class MongoUserRepository implements IUserRepository {
     });
 
     foundUserPromise.association.expenditureList.push(expenditureModel);
+    foundUserPromise.currentEther-= expenditure.value;
 
     await userDB.findByIdAndUpdate(id, foundUserPromise).catch((err) => {
       throw new Error(err);

@@ -29,4 +29,8 @@ export class Expenditure extends Entity {
   public getTransactionId(): string {
     return this.transactionId;
   }
+
+  public setTransactionId(hash: string): void {
+    this.transactionId = hash;
+  }
 }
