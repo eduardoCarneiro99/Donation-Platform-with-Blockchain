@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { NavLink as Link } from 'react-router-dom';
 
 import styled from 'styled-components';
-  
+import { userContext } from '../userContext';
+
 const Nav = styled.nav`
   background: #2d2d2d;
   height: 85px;
@@ -15,7 +16,7 @@ const Nav = styled.nav`
   /* Third Nav */
   /* justify-content: flex-start; */
 `;
-  
+
 const NavLink = styled(Link)`
   color: #eee;
   display: flex;
@@ -28,7 +29,7 @@ const NavLink = styled(Link)`
     color: #777;
   }
 `;
-  
+
 const Bars = styled(FaBars)`
   display: none;
   color: #808080;
@@ -42,7 +43,7 @@ const Bars = styled(FaBars)`
     cursor: pointer;
   }
 `;
-  
+
 const NavMenu = styled.div`
   display: flex;
   align-items: center;
@@ -56,7 +57,7 @@ const NavMenu = styled.div`
     display: none;
   }
 `;
-  
+
 const NavBtn = styled.nav`
   display: flex;
   align-items: center;
@@ -68,7 +69,7 @@ const NavBtn = styled.nav`
     display: none;
   }
 `;
-  
+
 const NavBtnLink = styled(Link)`
   border-radius: 4px;
   background: #808080;
@@ -89,11 +90,15 @@ const NavBtnLink = styled(Link)`
 `;
 
 const Navbar = () => {
+
+  const { user } = useContext(userContext)
+  console.log("usssseeeeer")
+  console.log(user)
   return (
     <>
       <Nav>
         <Bars />
-  
+
         <NavMenu>
           <NavLink to='/about' >
             About
@@ -110,18 +115,34 @@ const Navbar = () => {
           <NavLink to='/blogs' activeStyle>
             Blogs
           </NavLink> */}
-          <NavLink to='/signup' activeStyle>
-            Sign Up
-          </NavLink>
+          {user.name ?
+            <>
+              {user.role == "association" ?
+                <NavLink to={'/institutionProfile/' + user.id} activeStyle>
+                  Profile
+                </NavLink>
+                :
+                <NavLink to={'/userProfile/' + user.id} activeStyle>
+                  Profile
+                </NavLink>
+              }
+            </>
+            : null}
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
         </NavMenu>
-        <NavBtn>
-          <NavBtnLink to='/signin'>Sign In</NavBtnLink>
-        </NavBtn>
+        {!user.name ?
+          <NavBtn>
+            <NavBtnLink to='/signin'>Sign In</NavBtnLink>
+          </NavBtn>
+          :
+          <NavBtn>
+            <NavBtnLink to='/signout'>Sign Out</NavBtnLink>
+          </NavBtn>
+        }
       </Nav>
     </>
   );
 };
-  
+
 export default Navbar;

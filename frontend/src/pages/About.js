@@ -7,7 +7,8 @@ const About = () => {
         justifyContent: 'left',
         alignItems: 'left',
         height: '100vh',
-        padding: "0.2rem calc((100vw - 1000px) / 10)"
+        padding: "0.2rem calc((100vw - 1000px) / 10)",
+        backgroundColor: "#f2f2f2"
       }}
     >
       <h1>About the Product</h1>
