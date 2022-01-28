@@ -46,10 +46,9 @@ const InstitutionProfile = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
         axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + id + '/expenditure', {
-            "value": value,
+            "value": parseInt(value),
             "justification": justification,
-            "date": "Wed Jan 26 2022 15:54:40 GMT+0000 (Western European Standard Time)",
-            "transactionId": transactionID
+            "date": "Wed Jan 26 2022 15:54:40 GMT+0000 (Western European Standard Time)"
         }, {}).then((response) => {
             console.log(response)
             closeModal()

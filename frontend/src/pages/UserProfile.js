@@ -7,7 +7,7 @@ import { userContext } from '../userContext';
 
 const UserProfile = () => {
 
-    const {user} = useContext(userContext)
+    const {user, setUser} = useContext(userContext)
     const [donations, setDonations] = useState([])
 
     const [modalIsOpen, setIsOpen] = useState(false);
@@ -27,7 +27,7 @@ const UserProfile = () => {
     }
 
     useEffect(() => {
-        axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/donator/' + userContext.id, {}, {}).then((response) => {
+        axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/donator/' + user.id, {}, {}).then((response) => {
             console.log(response)
             setDonations(response.data)
 
@@ -40,10 +40,14 @@ const UserProfile = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + id + '/addFunds', {
-            "amount": value,
+        axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + user.id + '/addFunds', {
+            "amount": parseInt(value),
         }, {}).then((response) => {
             console.log(response)
+            let userAux = user;
+            userAux.currentEther+= parseInt(value);
+            setUser(userAux);
+            closeModal()
         })
             .catch((error) => {
                 console.log(error)
