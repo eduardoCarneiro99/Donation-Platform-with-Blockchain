@@ -80,7 +80,21 @@ export class UserService {
 
   async withdrawFunds(id: string, amount: number): Promise<boolean> {
     let user: User = await this.userRepository.findById(id);
-    await this.web3Service.sendTransactionFromUserToAdmin(user.getPublicAddress(), user.getPassword().getPassword(), amount.toString());
+    await this.web3Service.sendTransactionFromUserToAdmin(
+      user.getPublicAddress(),
+      user.getPassword().getPassword(),
+      amount.toString()
+    );
     return await this.userRepository.withdrawFunds(user, amount);
+  }
+
+  async login(email: string, password: string): Promise<UserDTO> {
+    const userResponseDomain: User = await this.userRepository.findByEmail(email);
+    if (userResponseDomain.getPassword().getPassword() === password) {
+      const userResponseDTO: UserDTO = UserMapper.domain2Dto(userResponseDomain);
+      return userResponseDTO;
+    }
+
+    throw new Error("Login Failed");
   }
 }

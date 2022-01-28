@@ -72,7 +72,7 @@ export class UserController {
       .addFunds(req.params.id, req.body.amount)
       .then((answer) => {
         if (answer === true) {
-          res.status(200).json({ message: "Added " + req.body.amount + " ether to your account."});
+          res.status(200).json({ message: "Added " + req.body.amount + " ether to your account." });
         } else {
           res.status(400).json({ message: "Could not add funds." });
         }
@@ -87,10 +87,21 @@ export class UserController {
       .withdrawFunds(req.params.id, req.body.amount)
       .then((answer) => {
         if (answer === true) {
-          res.status(200).json({ message: "Withdrew " + req.body.amount + " from your account."});
+          res.status(200).json({ message: "Withdrew " + req.body.amount + " from your account." });
         } else {
           res.status(400).json({ message: "Could not add funds." });
         }
+      })
+      .catch((err) => {
+        res.status(400).type("text").send(err.message);
+      });
+  }
+
+  async login(req: Request, res: Response) {
+    await this.userService
+      .login(req.body.email, req.body.password)
+      .then((userDTORet) => {
+        return res.status(200).json(userDTORet);
       })
       .catch((err) => {
         res.status(400).type("text").send(err.message);
