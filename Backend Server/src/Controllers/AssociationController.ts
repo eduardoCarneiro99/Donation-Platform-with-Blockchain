@@ -4,13 +4,29 @@ import { AssociationService } from "../Service/AssociationService";
 import { Container } from "inversify";
 import { ExpenditureDTO } from "../DTO/ExpenditureDTO";
 
+/**
+ * Controller for associations
+ */
 export class AssociationController {
+
+  /**
+   * Service for associations
+   */
   private associationService: AssociationService;
 
+  /**
+   * Constructor for the controller
+   * @param container Container for dependency injection
+   */
   constructor(container: Container) {
     this.associationService = new AssociationService(container);
   }
 
+  /**
+   * Method to get all associations
+   * @param req Request information
+   * @param res Response information
+   */
   async getAssociations(req: Request, res: Response) {
     await this.associationService
       .getAssociations()
@@ -22,6 +38,11 @@ export class AssociationController {
       });
   }
 
+  /**
+   * Method to add an expenditure to an association
+   * @param req Request information
+   * @param res Response information
+   */
   async addExpenditure(req: Request, res: Response) {
     var expenditureDTO: ExpenditureDTO = req.body;
     await this.associationService
@@ -34,6 +55,11 @@ export class AssociationController {
       });
   }
 
+  /**
+   * Method to update an associations's expenditure
+   * @param req Request information
+   * @param res Response information
+   */
   async updateExpenditure(req: Request, res: Response) {
     var expenditureDTO: ExpenditureDTO = req.body;
     await this.associationService
@@ -46,6 +72,11 @@ export class AssociationController {
       });
   }
 
+  /**
+   * Method to get an associations's expenditure by the association's and the expenditure's ID
+   * @param req Request information
+   * @param res Response information
+   */
   async getExpenditureByID(req: Request, res: Response) {
     await this.associationService
       .getAssociationExpenditureByID(req.params.userID, req.params.expenditureID)
@@ -57,6 +88,11 @@ export class AssociationController {
       });
   }
 
+  /**
+   * Method to get an associations's expenditure list by association ID
+   * @param req Request information
+   * @param res Response information
+   */
   async getExpenditureListByAssociationID(req: Request, res: Response) {
     await this.associationService
       .getAssociationExpenditureListByAssociationID(req.params.userID)
@@ -68,6 +104,11 @@ export class AssociationController {
       });
   }
 
+  /**
+   * Method to delete an associations's expenditure by the association's and the expenditure's ID
+   * @param req Request information
+   * @param res Response information
+   */
   async deleteExpenditure(req: Request, res: Response) {
     await this.associationService
       .deleteAssociationExpenditure(req.params.userID, req.params.expenditureID)

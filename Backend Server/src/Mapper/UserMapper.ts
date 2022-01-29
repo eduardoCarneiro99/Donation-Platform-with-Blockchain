@@ -13,7 +13,16 @@ import { IExpenditureModel } from "../Model/ExpenditureModel";
 import UserModel, { IUserModel } from "../Model/UserModel";
 import { ExpenditureMapper } from "./ExpenditureMapper";
 
+/**
+ * Mapper for a User
+ */
 export class UserMapper {
+
+  /**
+   * Method to map from json to a UserDTO
+   * @param body Json body
+   * @returns UserDTO
+   */
   static json2Dto(body: any): UserDTO {
     return new UserDTO(
       body.id,
@@ -33,6 +42,11 @@ export class UserMapper {
     );
   }
 
+  /**
+   * Method to map from DTO to Domain
+   * @param userDTO UserDTO
+   * @returns User Domain Object
+   */
   static dto2Domain(userDTO: UserDTO): User {
     const role = userDTO.role;
     let userDomain;
@@ -67,6 +81,11 @@ export class UserMapper {
     return userDomain;
   }
 
+  /**
+   * Method to map from Domain to a DB Model
+   * @param user User Domain
+   * @returns User DB Model
+   */
   static domain2Model(user: User): IUserModel {
     const role = user.getRole();
     let userModel;
@@ -111,6 +130,11 @@ export class UserMapper {
     return userModel;
   }
 
+  /**
+   * Method to map from DB Model to Domain
+   * @param userModel User DB Model
+   * @returns User Domain object
+   */
   static model2Domain(userModel: IUserModel): User {
     var role = userModel.role;
     var userDomain;
@@ -147,6 +171,11 @@ export class UserMapper {
     return userDomain;
   }
 
+  /**
+   * Method to map from Domain to a DonationDTO
+   * @param user User Domain object
+   * @returns UserDTO
+   */
   static domain2Dto(user: User): UserDTO {
     const role = user.getRole();
     let userDTO;

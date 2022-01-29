@@ -6,22 +6,39 @@ import { Container, injectable } from "inversify";
 import { TYPES } from "../InversifyConfig/types";
 import { Web3Service } from "../Web3/Web3Service";
 
+/**
+ * Service for users
+ */
 export class UserService {
+
+  /**
+   * Repository for users
+   */
   private userRepository: IUserRepository;
+
+  /**
+   * Web3 Service
+   */
   private web3Service: Web3Service;
 
+  /**
+   * Constructor for the service
+   * @param container Container for dependency injection
+   */
   constructor(container: Container) {
     this.userRepository = container.get<IUserRepository>(TYPES.UserRepository);
     this.web3Service = new Web3Service();
   }
 
   /**
-   *
-   * @param userDTO
-   * @returns
+   * Method to create a user
+   * @param userDTO User 
+   * @returns Created user
    */
   async createUser(userDTO: UserDTO): Promise<UserDTO> {
     const userDomain: User = UserMapper.dto2Domain(userDTO);
+
+    // Create the user account in the blockchain using his password and get his public address
     let publicAddress: string = await this.web3Service.createAccount(userDomain.getPassword().getPassword());
     userDomain.setPublicAddress(publicAddress);
     const userDomainResponse: User = await this.userRepository.save(userDomain);
@@ -30,9 +47,9 @@ export class UserService {
   }
 
   /**
-   *
-   * @param id
-   * @returns
+   * Method to get a user by ID
+   * @param id User ID
+   * @returns Found user
    */
   async getUserById(id: string): Promise<UserDTO> {
     const userResponseDomain: User = await this.userRepository.findById(id);
@@ -41,9 +58,9 @@ export class UserService {
   }
 
   /**
-   *
-   * @param id
-   * @returns
+   * Method to get a user by email
+   * @param email User email
+   * @returns Found user
    */
   async getUserByEmail(email: string): Promise<UserDTO> {
     const userResponseDomain: User = await this.userRepository.findByEmail(email);
@@ -52,9 +69,9 @@ export class UserService {
   }
 
   /**
-   *
-   * @param userDTO
-   * @returns
+   *  Method to update a user
+   * @param userDTO user to update
+   * @returns Updated user
    */
   async editUser(userDTO: UserDTO): Promise<UserDTO> {
     var userRequestDomain: User = UserMapper.dto2Domain(userDTO);
@@ -72,14 +89,30 @@ export class UserService {
     return await this.userRepository.deleteUser(id);
   }
 
+  /**
+   * 
+   * @param id User ID
+   * @param amount ether amount
+   * @returns True if successful false otherwise
+   */
   async addFunds(id: string, amount: number): Promise<boolean> {
     let user: User = await this.userRepository.findById(id);
+
+    // Make transaction from platform account to user
     await this.web3Service.sendTransactionFromAdmin(user.getPublicAddress(), amount.toString());
     return await this.userRepository.addFunds(user, amount);
   }
 
+  /**
+   * 
+   * @param id User ID
+   * @param amount ether amount
+   * @returns True if successful false otherwise
+   */
   async withdrawFunds(id: string, amount: number): Promise<boolean> {
     let user: User = await this.userRepository.findById(id);
+
+    // Make transaction from user to platform account
     await this.web3Service.sendTransactionFromUserToAdmin(user.getPublicAddress(), user.getPassword().getPassword(), amount.toString());
     return await this.userRepository.withdrawFunds(user, amount);
   }

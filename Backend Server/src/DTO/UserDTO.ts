@@ -16,6 +16,23 @@ export class UserDTO {
   public totalCoinReceived: number
   public expenditureList: Array<ExpenditureDTO>;
 
+  /**
+   * Constructor for the UserDTO. Same DTO for Donator and Association
+   * @param id 
+   * @param name 
+   * @param password 
+   * @param email 
+   * @param role 
+   * @param publicAddress 
+   * @param currentEther 
+   * @param country 
+   * @param donationsSentCounter 
+   * @param totalCoinDonated 
+   * @param description 
+   * @param donationsReceivedCounter 
+   * @param totalCoinReceived 
+   * @param expenditureList 
+   */
   constructor(id: string, name: string, password: string, email: string, role: string, publicAddress: string, currentEther: number, country: string, donationsSentCounter: number, totalCoinDonated: number, description: string, donationsReceivedCounter:number, totalCoinReceived: number, expenditureList: Array<ExpenditureDTO>) {
     this.id = id;
     this.name = name;

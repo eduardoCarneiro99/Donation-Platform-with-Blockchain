@@ -2,7 +2,16 @@ import { Donation } from "../Domain/Donation/Donation";
 import { DonationDTO } from "../DTO/DonationDTO";
 import DonationModel, { IDonationModel } from "../Model/DonationModel";
 
+/**
+ * Mapper for Donation
+ */
 export class DonationMapper {
+
+  /**
+   * Method to map from json to a DonationDTO
+   * @param body Json body
+   * @returns 
+   */
   static json2Dto(body: any): DonationDTO {
     return new DonationDTO(
       body.id,
@@ -15,6 +24,11 @@ export class DonationMapper {
     );
   }
 
+  /**
+   * Method to map from DonationDTO to a Donation
+   * @param donationDTO Donation DTO
+   * @returns Donation Domain object
+   */
   static dto2Domain(donationDTO: DonationDTO): Donation {
     let donation = new Donation(
       donationDTO.id,
@@ -28,6 +42,11 @@ export class DonationMapper {
     return donation;
   }
 
+  /**
+   * Method to map from a Donation Domain to a Donation DB Model
+   * @param donation Donation domain object
+   * @returns Donation DB Model
+   */
   static domain2Model(donation: Donation): IDonationModel {
     let donationModel = new DonationModel({
       id: donation.getID(),
@@ -41,6 +60,11 @@ export class DonationMapper {
     return donationModel;
   }
 
+  /**
+   * Method to map from Donation DB Model to a Donation Domain
+   * @param donationModel Donation DB Model
+   * @returns Donation Domain object
+   */
   static model2Domain(donationModel: IDonationModel): Donation {
     let donation = new Donation(
       donationModel._id.valueOf(),
@@ -54,6 +78,11 @@ export class DonationMapper {
     return donation;
   }
 
+  /**
+   * Method to map from a Donation Domain to a DonationDTO
+   * @param donation Donation Domain object
+   * @returns DonationDTO object
+   */
   static domain2Dto(donation: Donation): DonationDTO {
     let donationDTO = new DonationDTO(
       donation.getID(),

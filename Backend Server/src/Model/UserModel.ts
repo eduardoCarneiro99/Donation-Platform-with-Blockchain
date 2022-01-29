@@ -2,6 +2,9 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 import AssociationModel, { IAssociationModel } from "./AssociationModel";
 import DonatorModel, { IDonatorModel } from "./DonatorModel";
 
+/**
+ * DB Model for a User. Every user has the association and donator field, and depending on their role, one of them is null.
+ */
 export interface IUserModel extends Document {
   id: string;
   name: string;

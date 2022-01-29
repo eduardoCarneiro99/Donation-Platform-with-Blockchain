@@ -4,13 +4,29 @@ import { UserService } from "../Service/UserService";
 import { Container } from "inversify";
 import { visitFunctionBody } from "typescript";
 
+/**
+ * Controller for user
+ */
 export class UserController {
+
+  /**
+   * Service for the user
+   */
   private userService: UserService;
 
+  /**
+   * Constructor for user
+   * @param container Container for dependency injection
+   */
   constructor(container: Container) {
     this.userService = new UserService(container);
   }
 
+  /**
+   * Method to create a user (donator and association)
+   * @param req Request information
+   * @param res Response information
+   */
   public postUser(req: Request, res: Response) {
     const userDTO: UserDTO = req.body;
     this.userService
@@ -23,6 +39,11 @@ export class UserController {
       });
   }
 
+  /**
+   * Method to update a user (donator and association)
+   * @param req Request information
+   * @param res Response information
+   */
   async putUser(req: Request, res: Response) {
     var userDTO: UserDTO = req.body;
     await this.userService
@@ -35,6 +56,11 @@ export class UserController {
       });
   }
 
+  /**
+   * Method to get a user by ID
+   * @param req Request information
+   * @param res Response information
+   */
   async getUserByID(req: Request, res: Response) {
     await this.userService
       .getUserById(req.params.id)
@@ -46,6 +72,11 @@ export class UserController {
       });
   }
 
+  /**
+   * Method to get a user by email
+   * @param req Request information
+   * @param res Response information
+   */
   async getUserByEmail(req: Request, res: Response) {
     await this.userService
       .getUserByEmail(req.body.email)
@@ -57,6 +88,11 @@ export class UserController {
       });
   }
 
+  /**
+   * Method to delete a user by ID
+   * @param req Request information
+   * @param res Response information
+   */
   async deleteUser(req: Request, res: Response) {
     await this.userService.deleteUser(req.params.id).then((answer) => {
       if (answer === true) {
@@ -67,6 +103,11 @@ export class UserController {
     });
   }
 
+  /**
+   * Method to add funds to a user by ID
+   * @param req Request information
+   * @param res Response information
+   */
   async addFunds(req: Request, res: Response) {
     await this.userService
       .addFunds(req.params.id, req.body.amount)
@@ -82,6 +123,11 @@ export class UserController {
       });
   }
 
+  /**
+   * Method to withdraw fund from a user by ID
+   * @param req Request information
+   * @param res Response information
+   */
   async withdrawFunds(req: Request, res: Response) {
     await this.userService
       .withdrawFunds(req.params.id, req.body.amount)
