@@ -33,7 +33,7 @@ class UserRoutes {
      * Route to get a user by email
      */
     this.router.post("/login/", (req: express.Request, res: express.Response) =>
-      this.userController.getUserByEmail(req, res)
+      this.userController.login(req, res)
     );
 
     /**

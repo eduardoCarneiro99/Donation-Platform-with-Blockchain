@@ -116,4 +116,14 @@ export class UserService {
     await this.web3Service.sendTransactionFromUserToAdmin(user.getPublicAddress(), user.getPassword().getPassword(), amount.toString());
     return await this.userRepository.withdrawFunds(user, amount);
   }
+
+  async login(email: string, password: string): Promise<UserDTO> {
+    const userResponseDomain: User = await this.userRepository.findByEmail(email);
+    if (userResponseDomain.getPassword().getPassword() === password) {
+      const userResponseDTO: UserDTO = UserMapper.domain2Dto(userResponseDomain);
+      return userResponseDTO;
+    }
+
+    throw new Error("Login Failed");
+  }
 }

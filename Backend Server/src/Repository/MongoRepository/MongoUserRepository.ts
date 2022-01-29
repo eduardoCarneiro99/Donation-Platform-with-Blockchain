@@ -21,7 +21,7 @@ export class MongoUserRepository implements IUserRepository {
   async findByEmail(emailString: string): Promise<User> {
     const foundUserPromise: IUserModel = await userDB.findOne({ email: emailString });
     if (foundUserPromise == undefined) {
-      throw new Error("User");
+      throw new Error("User not found");
     }
     const userDomainRet: User = UserMapper.model2Domain(foundUserPromise);
     return userDomainRet;
@@ -32,21 +32,23 @@ export class MongoUserRepository implements IUserRepository {
     if (foundAssociations == undefined) {
       throw new Error("No associations found.");
     }
-    const associationsDomainList: Array<User> = foundAssociations.map<User>((userModel) => UserMapper.model2Domain(userModel));
+    const associationsDomainList: Array<User> = foundAssociations.map<User>((userModel) =>
+      UserMapper.model2Domain(userModel)
+    );
     return associationsDomainList;
   }
 
   async save(newUser: User): Promise<User> {
     const user: IUserModel = UserMapper.domain2Model(newUser);
     user.currentEther = 0;
-    if (user.role === "donator"){
+    if (user.role === "donator") {
       user.donator.totalCoinDonated = 0;
       user.donator.donationsSentCounter = 0;
-    }else{
+    } else {
       user.association.totalCoinReceived = 0;
       user.association.donationsReceivedCounter = 0;
     }
-    
+
     await user.validate();
 
     const createdUser: IUserModel = await userDB.create(user);
@@ -88,7 +90,7 @@ export class MongoUserRepository implements IUserRepository {
     });
 
     foundUserPromise.association.expenditureList.push(expenditureModel);
-    foundUserPromise.currentEther-= expenditure.value;
+    foundUserPromise.currentEther -= expenditure.value;
 
     await userDB.findByIdAndUpdate(id, foundUserPromise).catch((err) => {
       throw new Error(err);
@@ -160,16 +162,16 @@ export class MongoUserRepository implements IUserRepository {
   async updateUsersDonations(donatorID: string, associationID: string, value: number): Promise<boolean> {
     let donator: IUserModel = await userDB.findById(donatorID);
     let association: IUserModel = await userDB.findById(associationID);
-    donator.donator.totalCoinDonated+= value;
+    donator.donator.totalCoinDonated += value;
     donator.donator.donationsSentCounter++;
-    donator.currentEther-= value;
-    association.association.totalCoinReceived+= value;
+    donator.currentEther -= value;
+    association.association.totalCoinReceived += value;
     association.association.donationsReceivedCounter++;
-    association.currentEther+= value;
-    await userDB.findByIdAndUpdate(donatorID, donator).catch( (err) => {
+    association.currentEther += value;
+    await userDB.findByIdAndUpdate(donatorID, donator).catch((err) => {
       throw new Error(err);
     });
-    await userDB.findByIdAndUpdate(associationID, association).catch( (err) => {
+    await userDB.findByIdAndUpdate(associationID, association).catch((err) => {
       throw new Error(err);
     });
     return true;
@@ -178,7 +180,7 @@ export class MongoUserRepository implements IUserRepository {
   async addFunds(user: User, amount: number): Promise<boolean> {
     let userId: string = user.getID();
     let userModel: IUserModel = await userDB.findById(userId);
-    userModel.currentEther+= amount;
+    userModel.currentEther += amount;
     await userDB.findByIdAndUpdate(userId, userModel).catch((err) => {
       return false;
     });
@@ -188,7 +190,7 @@ export class MongoUserRepository implements IUserRepository {
   async withdrawFunds(user: User, amount: number): Promise<boolean> {
     let userId: string = user.getID();
     let userModel: IUserModel = await userDB.findById(userId);
-    userModel.currentEther < amount ? userModel.currentEther = 0 : userModel.currentEther-= amount;
+    userModel.currentEther < amount ? (userModel.currentEther = 0) : (userModel.currentEther -= amount);
     await userDB.findByIdAndUpdate(userId, userModel).catch((err) => {
       return false;
     });
