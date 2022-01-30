@@ -2,7 +2,7 @@ import { UserDTO } from "../DTO/UserDTO";
 import { User } from "../Domain/User/User";
 import { UserMapper } from "../Mapper/UserMapper";
 import { IUserRepository } from "../Repository/InterfacesRepository/IUserRepository";
-import { Container, injectable } from "inversify";
+import { Container } from "inversify";
 import { TYPES } from "../InversifyConfig/types";
 import { Web3Service } from "../Web3/Web3Service";
 
@@ -90,7 +90,7 @@ export class UserService {
   }
 
   /**
-   * 
+   * Method to add funds to a user
    * @param id User ID
    * @param amount ether amount
    * @returns True if successful false otherwise
@@ -104,7 +104,7 @@ export class UserService {
   }
 
   /**
-   * 
+   * Method to withdraw funds from a user
    * @param id User ID
    * @param amount ether amount
    * @returns True if successful false otherwise
@@ -117,6 +117,12 @@ export class UserService {
     return await this.userRepository.withdrawFunds(user, amount);
   }
 
+  /**
+   * Method to log a user in
+   * @param email Email
+   * @param password Password
+   * @returns The logged user
+   */
   async login(email: string, password: string): Promise<UserDTO> {
     const userResponseDomain: User = await this.userRepository.findByEmail(email);
     if (userResponseDomain.getPassword().getPassword() === password) {
