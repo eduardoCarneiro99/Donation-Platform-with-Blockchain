@@ -18,10 +18,10 @@ export default function Signin() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    // attempt to sign in with the provided data
     axios.post(process.env.REACT_APP_BACKEND_URL + '/users/login', {
       "email": email,
   }, {}).then((response) => {
-      console.log(response)
       setUser(response.data)
       history.push("/about")
     })

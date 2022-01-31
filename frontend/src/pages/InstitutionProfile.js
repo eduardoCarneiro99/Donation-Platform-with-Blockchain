@@ -11,8 +11,6 @@ const InstitutionProfile = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState(0)
     const [justification, setJustification] = useState("")
-    const [transactionID, setTransactionID] = useState(null)
-    const [date, setDate] = useState(Date.now())
 
     const { id } = useParams();
 
@@ -25,8 +23,8 @@ const InstitutionProfile = () => {
     }
 
     useEffect(() => {
+        // get institution profile details
         axios.get(process.env.REACT_APP_BACKEND_URL + '/users/' + id, {}, {}).then((response) => {
-            console.log(response)
             setInstitution(response.data)
 
         })
@@ -34,8 +32,8 @@ const InstitutionProfile = () => {
                 console.log(error)
             });
 
+        // get donations made to this institution
         axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/association/' + id, {}, {}).then((response) => {
-            console.log(response)
             setDonations(response.data)
         })
             .catch((error) => {
@@ -44,11 +42,12 @@ const InstitutionProfile = () => {
     }, [])
 
     const handleSubmit = (event) => {
+        // add a justification for an expenditure
         event.preventDefault()
         axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + id + '/expenditure', {
             "value": parseInt(value),
             "justification": justification,
-            "date": "Wed Jan 26 2022 15:54:40 GMT+0000 (Western European Standard Time)"
+            "date": "Wed Jan 31 2022 15:54:40 GMT+0000 (Western European Standard Time)"
         }, {}).then((response) => {
             console.log(response)
             closeModal()

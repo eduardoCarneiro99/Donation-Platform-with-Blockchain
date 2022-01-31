@@ -7,16 +7,12 @@ import { userContext } from '../userContext';
 
 const UserProfile = () => {
 
-    const {user, setUser} = useContext(userContext)
+    const { user, setUser } = useContext(userContext)
     const [donations, setDonations] = useState([])
 
     const [modalIsOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState(0)
-    const [justification, setJustification] = useState("")
-    const [transactionID, setTransactionID] = useState(null)
-    const [date, setDate] = useState(Date.now())
 
-    const { id } = useParams();
 
     function openModal() {
         setIsOpen(true);
@@ -27,8 +23,8 @@ const UserProfile = () => {
     }
 
     useEffect(() => {
+        // get donations made by this user
         axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/donator/' + user.id, {}, {}).then((response) => {
-            console.log(response)
             setDonations(response.data)
 
         })
@@ -39,13 +35,14 @@ const UserProfile = () => {
     }, [])
 
     const handleSubmit = (event) => {
+        // add funds to the user's account
         event.preventDefault()
         axios.post(process.env.REACT_APP_BACKEND_URL + '/users/' + user.id + '/addFunds', {
             "amount": parseInt(value),
         }, {}).then((response) => {
             console.log(response)
             let userAux = user;
-            userAux.currentEther+= parseInt(value);
+            userAux.currentEther += parseInt(value);
             setUser(userAux);
             closeModal()
         })
@@ -63,7 +60,7 @@ const UserProfile = () => {
                 backgroundColor: "#f2f2f2"
             }}
         >
-             <Modal
+            <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Add Funds"

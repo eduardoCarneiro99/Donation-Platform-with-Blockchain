@@ -8,10 +8,10 @@ const InstitutionsList = ({ navigation }) => {
 
     const [institutions, setInstitutions] = useState([])
     let history = useHistory()
-    const {user} = useContext(userContext)
+    const { user } = useContext(userContext)
     useEffect(() => {
+        // get a list of all the institutions
         axios.get(process.env.REACT_APP_BACKEND_URL + '/users/associations/list', {}, {}).then((response) => {
-            console.log(response)
             setInstitutions(response.data)
         })
             .catch((error) => {
@@ -21,7 +21,7 @@ const InstitutionsList = ({ navigation }) => {
     }, [])
 
     const goToInstitution = (id) => {
-        if(user.role == "association")
+        if (user.role == "association")
             history.push("/institutionProfile/" + id)
         else
             history.push("/institution/" + id)
@@ -64,7 +64,7 @@ const InstitutionsList = ({ navigation }) => {
 
                             </button>
                         </ListItem>
-                        <Divider variant="middle" component="li" /><Divider variant="middle" component="li" />
+                            <Divider variant="middle" component="li" /><Divider variant="middle" component="li" />
                         </>
                     )
                 })}

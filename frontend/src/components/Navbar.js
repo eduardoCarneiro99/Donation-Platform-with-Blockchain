@@ -92,8 +92,7 @@ const NavBtnLink = styled(Link)`
 const Navbar = () => {
 
   const { user } = useContext(userContext)
-  console.log("usssseeeeer")
-  console.log(user)
+
   return (
     <>
       <Nav>
@@ -106,15 +105,7 @@ const Navbar = () => {
           <NavLink to='/institutions' >
             Institutions
           </NavLink>
-          {/* <NavLink to='/annual' activeStyle>
-            Annual Report
-          </NavLink>
-          <NavLink to='/team' activeStyle>
-            Teams
-          </NavLink>
-          <NavLink to='/blogs' activeStyle>
-            Blogs
-          </NavLink> */}
+          {/* show user or institution profile according to the user role */}
           {user.name ?
             <>
               {user.role == "association" ?
@@ -128,9 +119,9 @@ const Navbar = () => {
               }
             </>
             : null}
-          {/* Second Nav */}
-          {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
+
         </NavMenu>
+        {/* sign in or out according to the current user context */}
         {!user.name ?
           <NavBtn>
             <NavBtnLink to='/signin'>Sign In</NavBtnLink>

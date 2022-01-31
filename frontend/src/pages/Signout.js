@@ -6,6 +6,7 @@ const SignOut = () => {
   let {setUser} = useContext(userContext)
 
   useEffect(() => {
+    // clean user context and go back to the sign in screen
     setUser({});
     window.location.replace("/")
   })

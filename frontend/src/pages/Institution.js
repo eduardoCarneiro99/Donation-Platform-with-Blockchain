@@ -25,17 +25,16 @@ const Institution = () => {
     }
 
     useEffect(() => {
+        // get institution profile details
         axios.get(process.env.REACT_APP_BACKEND_URL + '/users/' + id, {}, {}).then((response) => {
-            console.log(response)
             setInstitution(response.data)
-
         })
             .catch((error) => {
                 console.log(error)
             });
 
+        // get donations to this institution
         axios.get(process.env.REACT_APP_BACKEND_URL + '/donation/association/' + id, {}, {}).then((response) => {
-            console.log(response)
             setDonations(response.data)
         })
             .catch((error) => {
@@ -45,11 +44,12 @@ const Institution = () => {
     }, [])
 
     const handleSubmit = (event) => {
+        // request to add a new donation from this user providing the necessary details
         event.preventDefault()
         axios.post(process.env.REACT_APP_BACKEND_URL + '/donation', {
             "value": parseInt(value),
             "description": description,
-            "date": "Wed Jan 26 2022 15:54:40 GMT+0000 (Western European Standard Time)",
+            "date": "Wed Jan 31 2022 15:54:40 GMT+0000 (Western European Standard Time)",
             "donatorId": user.id,
             "associationId": id
         }, {}).then((response) => {
