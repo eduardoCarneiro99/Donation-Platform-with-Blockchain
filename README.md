@@ -1,7 +1,7 @@
 # Donation Platform with Blockchain
 Platform for blockchain based donations to charity
 
-#Developers
+## Developers
 - Me
 - @silviavrocha
 - @tomassantos99
