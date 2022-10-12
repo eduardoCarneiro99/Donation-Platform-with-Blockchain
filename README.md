@@ -2,9 +2,9 @@
 Platform for blockchain based donations to charity
 
 #Developers
-Me
-@silviavrocha
-@tomassantos99
+- Me
+- @silviavrocha
+- @tomassantos99
 
 ## Prerequisites
 
